@@ -89,6 +89,7 @@ class VentanaJuego(QMainWindow):
         super().__init__()
         self.juego = QuienEsQuienMinecraft()
         self.historial_preguntas = []
+        self.botones_preguntas = []  # Lista para almacenar los botones de preguntas
         self.initUI()
 
     def initUI(self):
@@ -129,6 +130,10 @@ class VentanaJuego(QMainWindow):
                 QPushButton:pressed {
                     background-color: #8B4513;
                     border: 3px solid #4A2511;
+                }
+                QPushButton:disabled {
+                    background-color: #6B4226;
+                    border: 3px solid #3A1F0D;
                 }
             """)
             boton.clicked.connect(lambda _, name=bloque.nombre: self.adivinar_bloque(name))
@@ -196,9 +201,15 @@ class VentanaJuego(QMainWindow):
                     background-color: #3e8e41;
                     border: 2px solid #2e6d31;
                 }
+                QPushButton:disabled {
+                    background-color: #cccccc;
+                    border: 2px solid #999999;
+                    color: #666666;
+                }
             """)
-            boton.clicked.connect(lambda _, c=caracteristica, p=pregunta: self.hacer_pregunta(c, p))
+            boton.clicked.connect(lambda _, c=caracteristica, p=pregunta, b=boton: self.hacer_pregunta(c, p, b))
             preguntas_layout.addWidget(boton, i // 2, i % 2)
+            self.botones_preguntas.append(boton)  # Añadir el botón a la lista
         
         layout_preguntas.addLayout(preguntas_layout)
         
@@ -242,7 +253,7 @@ class VentanaJuego(QMainWindow):
         widget_central.setLayout(layout_principal)
         self.setCentralWidget(widget_central)
 
-    def hacer_pregunta(self, caracteristica, pregunta):
+    def hacer_pregunta(self, caracteristica, pregunta, boton):
         respuesta = self.juego.hacer_pregunta(caracteristica)
         self.label_resultado.setText(f"{'Sí' if respuesta else 'No'}")
         
@@ -260,13 +271,16 @@ class VentanaJuego(QMainWindow):
         self.historial_layout.addWidget(nueva_pregunta)
         self.historial_preguntas.append(nueva_pregunta)
         
+        # Desactivar el botón después de hacer la pregunta
+        boton.setEnabled(False)
+        
         eliminados = self.juego.eliminar_bloques()
         for bloque in eliminados:
             for i in range(self.centralWidget().layout().itemAt(0).widget().layout().count()):
-                boton = self.centralWidget().layout().itemAt(0).widget().layout().itemAt(i).widget()
-                if isinstance(boton, QPushButton) and boton.toolTip() == bloque.nombre:
-                    boton.setEnabled(False)
-                    boton.setStyleSheet("""
+                boton_bloque = self.centralWidget().layout().itemAt(0).widget().layout().itemAt(i).widget()
+                if isinstance(boton_bloque, QPushButton) and boton_bloque.toolTip() == bloque.nombre:
+                    boton_bloque.setEnabled(False)
+                    boton_bloque.setStyleSheet("""
                         background-color: rgba(100, 100, 100, 180);
                         border: 3px solid #555;
                         border-radius: 12px;
