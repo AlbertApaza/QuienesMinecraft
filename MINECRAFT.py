@@ -93,7 +93,7 @@ class VentanaJuego(QMainWindow):
 
     def initUI(self):
         self.setWindowTitle('Minecraft: Quién es Quién')
-        self.setGeometry(100, 100, 1200, 800)
+        self.setGeometry(100, 100, 1300, 800)
 
         # Establecer fondo
         background = QImage("imagenes/minecraft_background.png")
@@ -105,24 +105,30 @@ class VentanaJuego(QMainWindow):
 
         # Panel de bloques
         panel_bloques = QFrame()
-        panel_bloques.setStyleSheet("background-color: rgba(139, 69, 19, 150); border-radius: 10px;")
+        panel_bloques.setStyleSheet("""
+            background-color: rgba(139, 69, 19, 180);
+            border-radius: 15px;
+            border: 2px solid #8B4513;
+        """)
         layout_bloques = QGridLayout()
         for i, bloque in enumerate(self.juego.bloques):
             boton = QPushButton()
             boton.setIcon(QIcon(QPixmap(bloque.imagen)))
-            boton.setIconSize(QSize(80, 80))
-            boton.setFixedSize(100, 100)
+            boton.setIconSize(QSize(90, 90))
+            boton.setFixedSize(110, 110)
             boton.setStyleSheet("""
                 QPushButton {
-                    background-color: #8B4513;
-                    border: 2px solid #4A2511;
-                    border-radius: 10px;
+                    background-color: #A0522D;
+                    border: 3px solid #4A2511;
+                    border-radius: 12px;
                 }
                 QPushButton:hover {
-                    background-color: #A0522D;
+                    background-color: #CD853F;
+                    border: 3px solid #8B4513;
                 }
                 QPushButton:pressed {
-                    background-color: #6B4226;
+                    background-color: #8B4513;
+                    border: 3px solid #4A2511;
                 }
             """)
             boton.clicked.connect(lambda _, name=bloque.nombre: self.adivinar_bloque(name))
@@ -132,17 +138,22 @@ class VentanaJuego(QMainWindow):
 
         # Panel de preguntas
         panel_preguntas = QFrame()
-        panel_preguntas.setStyleSheet("background-color: rgba(60, 60, 60, 180); border-radius: 10px;")
+        panel_preguntas.setStyleSheet("""
+            background-color: rgba(60, 60, 60, 200);
+            border-radius: 15px;
+            border: 2px solid #333;
+        """)
         layout_preguntas = QVBoxLayout()
         
         self.label_resultado = QLabel("¡Adivina el bloque de Minecraft!")
         self.label_resultado.setStyleSheet("""
-            background-color: rgba(255, 255, 255, 180);
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 18px;
+            background-color: rgba(255, 255, 255, 200);
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 20px;
             font-weight: bold;
             color: #333;
+            border: 2px solid #555;
         """)
         layout_preguntas.addWidget(self.label_resultado)
         
@@ -152,54 +163,55 @@ class VentanaJuego(QMainWindow):
             "¿Se puede craftear?",
             "¿Es resistente?",
             "¿Emite luz?",
-            "¿Tiene gravedad?",       # Nueva pregunta
-            "¿Se puede comer?",       # Nueva pregunta
-            "¿Es un fluido?",         # Nueva pregunta
-            "¿Es interactivo?",       # Nueva pregunta
-            "¿Es creativo?"           # Nueva pregunta
+            "¿Tiene gravedad?",
+            "¿Se puede comer?",
+            "¿Es un fluido?",
+            "¿Es interactivo?",
+            "¿Es creativo?"
         ]
 
         caracteristicas = [
-            "natural",
-            "transparente",
-            "crafteable",
-            "resistente",
-            "luminoso",
-            "gravedad",              # Nueva característica
-            "comer",                 # Nueva característica
-            "fluido",                # Nueva característica
-            "interactivo",           # Nueva característica
-            "creativo"               # Nueva característica
+            "natural", "transparente", "crafteable", "resistente", "luminoso",
+            "gravedad", "comer", "fluido", "interactivo", "creativo"
         ]
-        for pregunta, caracteristica in zip(preguntas, caracteristicas):
+        
+        preguntas_layout = QGridLayout()
+        for i, (pregunta, caracteristica) in enumerate(zip(preguntas, caracteristicas)):
             boton = QPushButton(pregunta)
             boton.setStyleSheet("""
                 QPushButton {
                     background-color: #4CAF50;
                     color: white;
-                    padding: 15px;
-                    border-radius: 8px;
-                    font-size: 16px;
+                    padding: 12px;
+                    border-radius: 10px;
+                    font-size: 14px;
                     font-weight: bold;
+                    border: 2px solid #45a049;
                 }
                 QPushButton:hover {
                     background-color: #45a049;
+                    border: 2px solid #4CAF50;
                 }
                 QPushButton:pressed {
                     background-color: #3e8e41;
+                    border: 2px solid #2e6d31;
                 }
             """)
             boton.clicked.connect(lambda _, c=caracteristica, p=pregunta: self.hacer_pregunta(c, p))
-            layout_preguntas.addWidget(boton)
+            preguntas_layout.addWidget(boton, i // 2, i % 2)
+        
+        layout_preguntas.addLayout(preguntas_layout)
         
         self.label_preguntas = QLabel(f"Preguntas hechas: {self.juego.preguntas_hechas}")
         self.label_preguntas.setStyleSheet("""
-            background-color: rgba(255, 255, 255, 180);
+            background-color: rgba(255, 255, 255, 200);
             padding: 15px;
             border-radius: 10px;
             font-size: 18px;
             font-weight: bold;
             color: #333;
+            border: 2px solid #555;
+            margin-top: 10px;
         """)
         layout_preguntas.addWidget(self.label_preguntas)
 
@@ -213,8 +225,9 @@ class VentanaJuego(QMainWindow):
         scroll_area.setWidget(self.historial_widget)
         scroll_area.setStyleSheet("""
             QScrollArea {
-                background-color: rgba(255, 255, 255, 120);
-                border-radius: 10px;
+                background-color: rgba(255, 255, 255, 150);
+                border-radius: 12px;
+                border: 2px solid #555;
             }
         """)
         
@@ -233,16 +246,16 @@ class VentanaJuego(QMainWindow):
         respuesta = self.juego.hacer_pregunta(caracteristica)
         self.label_resultado.setText(f"{'Sí' if respuesta else 'No'}")
         
-        # Añadir la pregunta y respuesta al historial
         respuesta_texto = "Sí" if respuesta else "No"
         nueva_pregunta = QLabel(f"{pregunta} {respuesta_texto}")
         nueva_pregunta.setStyleSheet("""
-            background-color: rgba(255, 255, 255, 150);
-            padding: 10px;
-            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 180);
+            padding: 12px;
+            border-radius: 8px;
             font-size: 14px;
             color: #333;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            border: 1px solid #999;
         """)
         self.historial_layout.addWidget(nueva_pregunta)
         self.historial_preguntas.append(nueva_pregunta)
@@ -253,21 +266,30 @@ class VentanaJuego(QMainWindow):
                 boton = self.centralWidget().layout().itemAt(0).widget().layout().itemAt(i).widget()
                 if isinstance(boton, QPushButton) and boton.toolTip() == bloque.nombre:
                     boton.setEnabled(False)
-                    boton.setStyleSheet("background-color: rgba(100, 100, 100, 150); border: 2px solid #333;")
+                    boton.setStyleSheet("""
+                        background-color: rgba(100, 100, 100, 180);
+                        border: 3px solid #555;
+                        border-radius: 12px;
+                    """)
                     break
         self.label_preguntas.setText(f"Preguntas hechas: {self.juego.preguntas_hechas}")
 
     def adivinar_bloque(self, nombre):
         if self.juego.adivinar(nombre):
-            QMessageBox.information(self, "¡Felicidades!", f"¡Correcto! El bloque era {nombre}. Lo adivinaste en {self.juego.preguntas_hechas} preguntas.")
+            QMessageBox.information(self, "¡Felicidades!", f"¡Correcto! El bloque era {nombre}.\nLo adivinaste en {self.juego.preguntas_hechas} preguntas.", QMessageBox.Ok)
             self.close()
         else:
-            QMessageBox.critical(self, "¡Perdiste!", f"Incorrecto. El bloque no era {nombre}. El bloque correcto era {self.juego.bloque_objetivo.nombre}.")
+            QMessageBox.critical(self, "¡Perdiste!", f"Incorrecto. El bloque no era {nombre}.\nEl bloque correcto era {self.juego.bloque_objetivo.nombre}.", QMessageBox.Ok)
             self.close()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     app.setStyle('Fusion')
+    
+    # Configurar fuente global
+    font = QFont("Minecraft", 10)
+    app.setFont(font)
+    
     ventana = VentanaJuego()
     ventana.show()
     sys.exit(app.exec_())
