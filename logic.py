@@ -14,7 +14,7 @@ class Sentence():
     def symbols(self):
         """Returns a set of all symbols in the logical sentence."""
         return set()
-
+ 
     @classmethod
     def validate(cls, sentence):
         if not isinstance(sentence, Sentence):
