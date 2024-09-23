@@ -1,9 +1,13 @@
 import sys
 import random
+import os
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon, QImage, QPalette, QBrush, QPixmap, QFont
 from PyQt5.QtCore import Qt, QSize
 from logic import *
+from colorama import Fore, Style, init
+
+init()
 
 class simbolos:
     def __init__(self, nombre, imagen, caracteristicas):
@@ -14,24 +18,38 @@ class simbolos:
 class QuienEsQuienMinecraft:
     def __init__(self):
         self.bloques = [
-            simbolos("Tierra", "imagenes/dirt.jpg", {"natural": True, "transparente": False, "crafteable": False, "resistente": False, "luminoso": False}),
-            simbolos("Piedra", "imagenes/stone.png", {"natural": True, "transparente": False, "crafteable": True, "resistente": True, "luminoso": False}),
-            simbolos("Cristal", "imagenes/glass.png", {"natural": False, "transparente": True, "crafteable": True, "resistente": False, "luminoso": False}),
-            simbolos("Antorcha", "imagenes/torch.png", {"natural": False, "transparente": True, "crafteable": True, "resistente": False, "luminoso": True}),
-            simbolos("Bloque de Diamante", "imagenes/diamante.png", {"natural": False, "transparente": False, "crafteable": True, "resistente": True, "luminoso": False}),
-            simbolos("Hoja", "imagenes/leaves.png", {"natural": True, "transparente": True, "crafteable": False, "resistente": False, "luminoso": False}),
-            simbolos("Obsidiana", "imagenes/obsidian.png", {"natural": True, "transparente": False, "crafteable": False, "resistente": True, "luminoso": False}),
-            simbolos("Redstone", "imagenes/redstone_block.png", {"natural": False, "transparente": False, "crafteable": True, "resistente": False, "luminoso": True}),
-            simbolos("Agua", "imagenes/water.png", {"natural": True, "transparente": True, "crafteable": False, "resistente": False, "luminoso": False}),
-            simbolos("Madera", "imagenes/wood.png", {"natural": True, "transparente": False, "crafteable": True, "resistente": False, "luminoso": False}),
-            simbolos("TNT", "imagenes/tnt.png", {"natural": False, "transparente": False, "crafteable": True, "resistente": False, "luminoso": False}),
-            simbolos("Calabaza", "imagenes/pumpkin.png", {"natural": True, "transparente": False, "crafteable": True, "resistente": False, "luminoso": False}),
+            simbolos("Tierra", "imagenes/dirt.jpg", {"natural": True, "transparente": False, "crafteable": False, "resistente": False, "luminoso": False, "gravedad": False, "comer": False, "fluido": False, "interactivo": False, "creativo": False}),
+            simbolos("Piedra", "imagenes/stone.png", {"natural": True, "transparente": False, "crafteable": True, "resistente": True, "luminoso": False, "gravedad": False, "comer": False, "fluido": False, "interactivo": False, "creativo": False}),
+            simbolos("Cristal", "imagenes/glass.png", {"natural": False, "transparente": True, "crafteable": True, "resistente": False, "luminoso": False, "gravedad": False, "comer": False, "fluido": False, "interactivo": False, "creativo": False}),
+            simbolos("Antorcha", "imagenes/torch.png", {"natural": False, "transparente": True, "crafteable": True, "resistente": False, "luminoso": True, "gravedad": False, "comer": False, "fluido": False, "interactivo": True, "creativo": False}),
+            simbolos("Bloque de Diamante", "imagenes/diamante.png", {"natural": False, "transparente": False, "crafteable": True, "resistente": True, "luminoso": False, "gravedad": False, "comer": False, "fluido": False, "interactivo": False, "creativo": False}),
+            simbolos("Hoja", "imagenes/leaves.png", {"natural": True, "transparente": True, "crafteable": False, "resistente": False, "luminoso": False, "gravedad": True, "comer": False, "fluido": False, "interactivo": False, "creativo": False}),
+            simbolos("Obsidiana", "imagenes/obsidian.png", {"natural": True, "transparente": False, "crafteable": False, "resistente": True, "luminoso": False, "gravedad": False, "comer": False, "fluido": False, "interactivo": False, "creativo": False}),
+            simbolos("Redstone", "imagenes/redstone_block.png", {"natural": False, "transparente": False, "crafteable": True, "resistente": False, "luminoso": True, "gravedad": False, "comer": False, "fluido": False, "interactivo": False, "creativo": False}),
+            simbolos("Agua", "imagenes/water.png", {"natural": True, "transparente": True, "crafteable": False, "resistente": False, "luminoso": False, "gravedad": False, "comer": False, "fluido": True, "interactivo": False, "creativo": False}),
+            simbolos("Madera", "imagenes/wood.png", {"natural": True, "transparente": False, "crafteable": True, "resistente": False, "luminoso": False, "gravedad": False, "comer": False, "fluido": False, "interactivo": False, "creativo": False}),
+            simbolos("TNT", "imagenes/tnt.png", {"natural": False, "transparente": False, "crafteable": True, "resistente": False, "luminoso": False, "gravedad": False, "comer": False, "fluido": False, "interactivo": True, "creativo": False}),
+            simbolos("Calabaza", "imagenes/pumpkin.png", {"natural": True, "transparente": False, "crafteable": True, "resistente": False, "luminoso": False, "gravedad": False, "comer": False, "fluido": False, "interactivo": True, "creativo": False}),
+            
+            simbolos("Grava", "imagenes/grava.png", {"natural": True, "transparente": False, "crafteable": False, "resistente": False, "luminoso": False, "gravedad": True, "comer": False, "fluido": False, "interactivo": False, "creativo": False}),
+            simbolos("Arena", "imagenes/sand.png", {"natural": True, "transparente": False, "crafteable": False, "resistente": False, "luminoso": False, "gravedad": True, "comer": False, "fluido": False, "interactivo": False, "creativo": False}),
+            simbolos("Arcilla", "imagenes/clay.png", {"natural": True, "transparente": False, "crafteable": True, "resistente": False, "luminoso": False, "gravedad": False, "comer": False, "fluido": False, "interactivo": False, "creativo": False}),
+            simbolos("Lava", "imagenes/lava.png", {"natural": True, "transparente": True, "crafteable": False, "resistente": False, "luminoso": True, "gravedad": False, "comer": False, "fluido": True, "interactivo": False, "creativo": False}),
+            simbolos("Hierro", "imagenes/iron.png", {"natural": False, "transparente": False, "crafteable": True, "resistente": True, "luminoso": False, "gravedad": False, "comer": False, "fluido": False, "interactivo": False, "creativo": False}),
+            simbolos("Esmeralda", "imagenes/emerald.png", {"natural": False, "transparente": False, "crafteable": True, "resistente": True, "luminoso": False, "gravedad": False, "comer": False, "fluido": False, "interactivo": False, "creativo": False}),
+            simbolos("Oro", "imagenes/gold.png", {"natural": False, "transparente": False, "crafteable": True, "resistente": True, "luminoso": False, "gravedad": False, "comer": False, "fluido": False, "interactivo": False, "creativo": False}),
+            simbolos("Roca Madre", "imagenes/bedrock.png", {"natural": True, "transparente": False, "crafteable": False, "resistente": True, "luminoso": False, "gravedad": False, "comer": False, "fluido": False, "interactivo": False, "creativo": True}),
+            simbolos("Esponja", "imagenes/sponge.png", {"natural": True, "transparente": False, "crafteable": False, "resistente": False, "luminoso": False, "gravedad": False, "comer": False, "fluido": False, "interactivo": False, "creativo": False}),
+            simbolos("Bloque de Slime", "imagenes/slime.png", {"natural": False, "transparente": True, "crafteable": True, "resistente": False, "luminoso": False, "gravedad": False, "comer": False, "fluido": False, "interactivo": True, "creativo": False}),
+            simbolos("Tarta", "imagenes/cake.png", {"natural": False, "transparente": False, "crafteable": True, "resistente": False, "luminoso": False, "gravedad": False, "comer": True, "fluido": False, "interactivo": True, "creativo": False}),
+            simbolos("Cofre", "imagenes/chest.png", {"natural": False, "transparente": False, "crafteable": True, "resistente": False, "luminoso": False, "gravedad": False, "comer": False, "fluido": False, "interactivo": True, "creativo": False}),
+            simbolos("Yunque", "imagenes/anvil.png", {"natural": False, "transparente": False, "crafteable": True, "resistente": True, "luminoso": False, "gravedad": True, "comer": False, "fluido": False, "interactivo": True, "creativo": False}),
         ]
-        #self.bloque_objetivo = next(bloque for bloque in self.bloques if bloque.nombre == "Bloque de Diamante")
         self.bloque_objetivo = random.choice(self.bloques)
-        self.conocimiento = And()  # Base inicial vacía
+        self.conocimiento = And()
         self.preguntas_hechas = 0
         print(f"El bloque objetivo es: {self.bloque_objetivo.nombre}")
+        self.print_possible_blocks()
 
     def hacer_pregunta(self, caracteristica):
         self.preguntas_hechas += 1
@@ -53,7 +71,17 @@ class QuienEsQuienMinecraft:
                 bloques_eliminados.append(bloque)
         for bloque in bloques_eliminados:
             self.bloques.remove(bloque)
+        self.print_possible_blocks()
         return bloques_eliminados
+
+    def print_possible_blocks(self):
+        # Limpia la consola
+        os.system('cls' if os.name == 'nt' else 'clear')
+
+        # Imprime los bloques posibles
+        print("\nBloques posibles:")
+        for bloque in self.bloques:
+            print(f"{Fore.GREEN}{bloque.nombre}{Style.RESET_ALL}")
 
 
 class VentanaJuego(QMainWindow):
@@ -75,7 +103,7 @@ class VentanaJuego(QMainWindow):
 
         layout_principal = QHBoxLayout()
 
-        # Panel de bloques (sin cambios)
+        # Panel de bloques
         panel_bloques = QFrame()
         panel_bloques.setStyleSheet("background-color: rgba(139, 69, 19, 150); border-radius: 10px;")
         layout_bloques = QGridLayout()
@@ -102,7 +130,7 @@ class VentanaJuego(QMainWindow):
             layout_bloques.addWidget(boton, i // 4, i % 4)
         panel_bloques.setLayout(layout_bloques)
 
-        # Panel de preguntas (modificado)
+        # Panel de preguntas
         panel_preguntas = QFrame()
         panel_preguntas.setStyleSheet("background-color: rgba(60, 60, 60, 180); border-radius: 10px;")
         layout_preguntas = QVBoxLayout()
@@ -118,8 +146,31 @@ class VentanaJuego(QMainWindow):
         """)
         layout_preguntas.addWidget(self.label_resultado)
         
-        preguntas = ["¿Es un bloque natural?", "¿Es transparente?", "¿Se puede craftear?", "¿Es resistente?", "¿Emite luz?"]
-        caracteristicas = ["natural", "transparente", "crafteable", "resistente", "luminoso"]
+        preguntas = [
+            "¿Es un bloque natural?",
+            "¿Es transparente?",
+            "¿Se puede craftear?",
+            "¿Es resistente?",
+            "¿Emite luz?",
+            "¿Tiene gravedad?",       # Nueva pregunta
+            "¿Se puede comer?",       # Nueva pregunta
+            "¿Es un fluido?",         # Nueva pregunta
+            "¿Es interactivo?",       # Nueva pregunta
+            "¿Es creativo?"           # Nueva pregunta
+        ]
+
+        caracteristicas = [
+            "natural",
+            "transparente",
+            "crafteable",
+            "resistente",
+            "luminoso",
+            "gravedad",              # Nueva característica
+            "comer",                 # Nueva característica
+            "fluido",                # Nueva característica
+            "interactivo",           # Nueva característica
+            "creativo"               # Nueva característica
+        ]
         for pregunta, caracteristica in zip(preguntas, caracteristicas):
             boton = QPushButton(pregunta)
             boton.setStyleSheet("""
