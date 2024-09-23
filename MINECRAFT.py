@@ -36,32 +36,11 @@ class QuienEsQuienMinecraft:
     def hacer_pregunta(self, caracteristica):
         self.preguntas_hechas += 1
         respuesta = self.bloque_objetivo.caracteristicas[caracteristica]
-
         if respuesta:
-            self.conocimiento = And(self.conocimiento, Symbol(caracteristica))
-            print(f"La característica '{caracteristica}' es verdadera.")
+            self.conocimiento.add(Symbol(f"{caracteristica}"))
         else:
-            self.conocimiento = And(self.conocimiento, Not(Symbol(caracteristica)))
-            print(f"La característica '{caracteristica}' es falsa.")
-
-        # Ejemplo de lógica adicional
-        if caracteristica == "natural" and not respuesta:
-            self.conocimiento = And(self.conocimiento, Not(Symbol("transparente")))
-            print("Como no es natural, también es cierto que no es transparente.")
-
-        if caracteristica == "luminoso" and respuesta:
-            self.conocimiento = And(self.conocimiento, Symbol("crafteable"))
-            print("Como es luminoso, también se supone que es crafteable.")
-
-        print(f"Conocimiento actual: {self.conocimiento}")
+            self.conocimiento.add(Not(Symbol(f"{caracteristica}")))
         return respuesta
-
-    def generar_conocimiento(self):
-        # Generar conocimiento basado en las características
-        caracteristicas = ["natural", "transparente", "crafteable", "resistente", "luminoso"]
-
-        for caracteristica in caracteristicas:
-            self.hacer_pregunta(caracteristica)
 
     def adivinar(self, nombre):
         return nombre == self.bloque_objetivo.nombre
